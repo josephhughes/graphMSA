@@ -1,0 +1,9 @@
+id	collection_date	continent	country	region
+ref	2025-01-01	Europe	France	Normandy
+seq1	2025-02-15	Europe	France	Normandy
+seq2	2025-02-15	Europe	United Kingdom	Scotland
+seq3	2025-03-11	Europe	United Kingdom	Wales
+seq4	2025-03-28	Europe	United Kingdom	England
+seq5	2025-03-30	Europe	United Kingdom	Scotland
+seq6	2025-04-01	Africa	Algeria	N/A
+seq7	2025-04-02	Europe	United Kingdom	Northern Ireland
