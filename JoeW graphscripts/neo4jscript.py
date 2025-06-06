@@ -190,7 +190,7 @@ if __name__ == "__main__":
     USER = "neo4j"
     PASSWORD = "readingroom"
 
-    with open("../benchmark_alignments/99_percent_identity_alignment.fasta", "r") as file:
+    with open("Dummy/dummy_aln.fa", "r") as file:
         fasta_input = file.read()
     try:
         with open("Dummy/dummy_metadata.tsv", "r") as file:
