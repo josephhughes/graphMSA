@@ -4,26 +4,26 @@ Graph representation of multiple sequence alignment and BAM files
 
 This project provides a set of python scripts and cypher queries to transform multiple sequence alignment data into a Neo4j graph database. By representing sequences and their relationships as a graph, this approach enables a powerful visual exploration of genetic variations, shared regions and individual sequence paths.
 
-This project explores different graph data models, evolving from simpler representations to more optimised variation graphs. Each model offers different advantages for querying and visualisation. 
+These scripts explore different graph data models, evolving from simpler representations to more optimised variation graphs. Each model offers different advantages for querying and visualisation. 
 
 # Getting Started
 
 ## Prerequisites:
 
-1. Python 3
+1. Python3
 2. Neo4j Desktop or Server (a running neo4j instance is required, all scripts in this repository are configured to connect to neo4j://localhost:7690 or neo4j://localhost:7687)
-3. Neo4j Python Driver (install it using pip: pip install neo4j)
-4. Biopython (Install it using pip: pip install biopython)
+3. Neo4j Python Driver (Install using pip: pip install neo4j)
+4. Biopython (Install using pip: pip install biopython)
 
 
 ## Installation:
 
 1.	Clone this repository to your local machine
 ```
-git clone <your-repo-url>
-cd <your-repo-name>
+git clone https://github.com/josephhughes/graphMSA/
+cd https://github.com/josephhughes/graphMSA/
 ```
-3.	(recommended) Set up a Python Virtual Environment
+2.	Set up a Python Virtual Environment (recommended)
 ```
 python3 -m venv venv
 source venv/bin/activate
@@ -32,31 +32,31 @@ Install dependencies within the virtual environment
 ```
 pip install neo4j biopython
 ```
-5.	Configure your neo4j connection and ensure your database is running and accessible
-6.	IMPORTANT Update the AUTH tuple in all python scripts to match your actual neo4j username and password
+3.	Configure your neo4j connection and ensure your database is running and accessible
+4.	**IMPORTANT** Update the AUTH tuple in all python scripts to match your actual neo4j username and password
 
 
 
 ## Database Management
-Managing your neo4j database correctly is crucial, especially when switching between graph models or re-importing data.
+Managing your neo4j database correctly is essential, especially when switching between graph models or re-importing data.
 
 ### Clearing the Database
 1.	Open neo4j browser
-2.	Run the following cypher query
+2.	Run the following cypher query:
 ```
 MATCH (n) DETACH DELETE n;
 ```
 
 ### Creating Constraints
 
-For optimal performance, ensure the following constraints are created by running them in the Neo4j Browser before running the script in python:
+For optimal performance, ensure the following constraints are created by running them in the neo4j Browser before running the scripts in python:
 ```
 CREATE CONSTRAINT IF NOT EXISTS FOR (s:Sample) REQUIRE s.name IS UNIQUE;
 CREATE CONSTRAINT IF NOT EXISTS FOR (n:Nucleotide) REQUIRE (n.pos, n.base) IS UNIQUE;
 ```
 
 
-# Scripts Overview
+## Scripts Overview
 
 ### check_differences.cypher
 CYPHER code to quickly identify where individual sequences differ from a designated reference sequence. This query allows you to pinpoint the exact positions and base changes where a sample sequence deviates from the reference.
@@ -132,12 +132,13 @@ Relationships:
 
 ### retrieve_aligned_seq.py
 
-This script reconstructs the full, aligned sequence for a. specified sample from a Neo4j graph database. This is useful for extracting individual sequences in their aligned form after they’ve been processed and stored in the graph by fasta_to_graphv4.py. 
+This script reconstructs the full, aligned sequence for a specified sample from a Neo4j graph database. This is useful for extracting individual sequences in their aligned form after they’ve been processed and stored in the graph by fasta_to_graphv4.py. 
 
 This script performs two main operations, Graph Traversal, executed using a cypher query and Sequence Reconstruction, a python function that takes the output of the Graph Traversal and iteratively compares position values to infer the original alignment length.
 
 Usage:
-To reconstruct and print a specific sample’s aligned sequence.
+
+To reconstruct and print a specific sample’s aligned sequence:
 ```
 python3 retrieve_aligned_seq.py <path_to_your_fasta_file>
 ```
@@ -159,21 +160,31 @@ This script allows retrieval of aligned or unaligned sequences for individual sa
 
 Dependencies:
 
-retrieve_aligned_seq.py
+- retrieve_aligned_seq.py
 
-retrieve_unaligned_seq.py
+- retrieve_unaligned_seq.py
 
-Please ensure these scripts are in the same directory.
+*Please ensure these scripts are in the same directory.*
 
 Usage:
 ```
 python retrieve_seqs.py <samples_input> <mode>
 ```
-Options:
+Arguments:
 
-<sample_input> : <sample_name>,all,<file_name>.txt
+<samples_input>: Specifies which sequence(s) to retrieve
 
-<mode> : --aligned, --unaligned
+- <sample_name>: A single sequence ID (e.g., ref, seq1)
+          
+- all: The literal string "all" to retrieve every sequence in the database
+          
+- <file_name>.txt: The path to a text file with one sequence ID per line
+
+<mode>: Determines the output format of the sequence
+
+- --aligned: Retrieves the sequence as it appears in the alignment, with gaps inferred
+
+- --unaligned: Retrieves the raw, ungapped form of the sequence
 
 Example:
 ```
@@ -184,9 +195,9 @@ python3 retrieve_seqs.py sequence1 --unaligned
 This script provides a highly flexible framework for building a comprehensive graph database, explicitly distinguishing between reference bases and mutations, handling gaps and integrating a hierarchical metadata structure for contextual analysis and visualisation.
 
 Usage:
-
+```
 python3 sequence_graph_builder.py
-
+```
 N.B. Input file paths are hardcoded into this script.
 
 Nodes: 
