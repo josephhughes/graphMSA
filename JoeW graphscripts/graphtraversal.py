@@ -1,5 +1,6 @@
 from neo4j import GraphDatabase
 
+
 class SequenceGraphTraverser:
     def __init__(self, uri, user, password):
         self.driver = GraphDatabase.driver(uri, auth=(user, password))
@@ -79,7 +80,7 @@ if __name__ == "__main__":
     PASSWORD = "readingroom"
 
     traverser = SequenceGraphTraverser(URI, USER, PASSWORD)
-    seq_id = input("Please enter the sequence u wish to traverse.\n")
+    seq_id = input("Please enter the sequence u wish to retrieve.\n")
     aligned, unaligned = traverser.traverse_sequence(seq_id)
     traverser.close()
 

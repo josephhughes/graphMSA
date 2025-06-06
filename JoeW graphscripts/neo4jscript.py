@@ -99,7 +99,6 @@ class SequenceGraphBuilder:
                     to_id=to_id, to_pos=to_pos
                 )
 
-
             # Create nodes for other sequences if they differ
             all_node_ids = {}
             for seq_id, seq in sequences.items():
@@ -199,6 +198,27 @@ class SequenceGraphBuilder:
                             )
 
                         break  # Only connect to first base
+
+            if metadata:
+                self.create_metadata_hierarchy(session, metadata)
+
+    def create_metadata_hierarchy(self, session, metadata):
+        for seq_id, record in metadata.items():
+            continent = record.get("continent", "Unknown")
+            country = record.get("country", "Unknown")
+            region = record.get("region", "Unknown")
+            if region.upper() in {"N/A", "", "NA"}:
+                region = "Unknown"
+
+            session.run("""
+                MERGE (c:Continent {name: $continent})
+                MERGE (co:Country {name: $country})
+                MERGE (r:Region {name: $region})
+                MERGE (p:Pointer {seq_id: $seq_id})
+                MERGE (c)-[:HAS_COUNTRY]->(co)
+                MERGE (co)-[:HAS_REGION]->(r)
+                MERGE (r)-[:HAS_SEQUENCE]->(p)
+            """, continent=continent, country=country, region=region, seq_id=seq_id)
 
 
 if __name__ == "__main__":
